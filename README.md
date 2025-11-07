@@ -53,6 +53,7 @@ Severinno/
    - `GET /api/reservations/available/?date=YYYY-MM-DD&start_time=HH:MM&end_time=HH:MM` — checagem de disponibilidade.
    - `GET/POST /api/software-requests/` — solicitações de software vinculadas a reservas (professores).
    - `PATCH /api/software-requests/{id}/status/` — atualização de status (apenas administradores).
+   - `POST /api/accounts/logout/` — invalida o refresh token via blacklist (requer autenticação).
 
 ## Painel administrativo
 - Header customizado com identidade visual da Severinno.
@@ -76,5 +77,7 @@ python backend/manage.py test
 - Painel administrativo com branding próprio, filtros específicos e CRUD dedicado para professores.
 - API protegida para cadastro de salas/máquinas e regras de reserva com validação de conflitos.
 - Fluxo de solicitação de software com controle de status e validação de permissão.
+- Autenticação JWT com refresh rotativo + blacklist (logout seguro) e throttling configurável.
+- Regras de segurança avançadas ativadas em produção (HSTS, SSL redirect, cookies HttpOnly, CSP).
 
 Mais detalhes serão documentados nas próximas sprints.

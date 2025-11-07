@@ -16,6 +16,7 @@ class AuthenticationFlowTests(APITestCase):
         self.login_url = reverse("accounts-login")
         self.refresh_url = reverse("accounts-refresh")
         self.profile_url = reverse("accounts-profile")
+        self.logout_url = reverse("accounts-logout")
 
     def test_register_creates_user(self):
         payload = {
@@ -58,3 +59,23 @@ class AuthenticationFlowTests(APITestCase):
         )
         self.assertEqual(refresh_response.status_code, status.HTTP_200_OK)
         self.assertIn("access", refresh_response.data)
+
+    def test_logout_blacklists_refresh_token(self):
+        user = User.objects.create_user(
+            email="logout@example.com",
+            matricula="LOG001",
+            password="senha-logout",
+            user_type=User.UserType.PROFESSOR,
+        )
+        login_response = self.client.post(
+            self.login_url,
+            {"email": user.email, "password": "senha-logout"},
+            format="json",
+        )
+        refresh = login_response.data["refresh"]
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {login_response.data['access']}")
+        logout_response = self.client.post(self.logout_url, {"refresh": refresh}, format="json")
+        self.assertEqual(logout_response.status_code, status.HTTP_204_NO_CONTENT)
+
+        refresh_fail = self.client.post(self.refresh_url, {"refresh": refresh}, format="json")
+        self.assertEqual(refresh_fail.status_code, status.HTTP_401_UNAUTHORIZED)
