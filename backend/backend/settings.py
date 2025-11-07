@@ -55,6 +55,7 @@ CONTENT_SECURITY_POLICY = os.getenv(
 
 # Application definition
 INSTALLED_APPS = [
+    "rooms",
     "accounts",
     "corsheaders",
     "rest_framework",

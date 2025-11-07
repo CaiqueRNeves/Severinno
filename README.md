@@ -46,6 +46,8 @@ Severinno/
    - `POST /api/accounts/refresh/` — renovação do access token.
    - `GET /api/accounts/me/` — dados do usuário autenticado (Bearer token obrigatório).
    - `GET /admin/` — painel administrativo personalizado (login requerido).
+   - `GET/POST /api/rooms/` — CRUD de salas (apenas administradores).
+   - `GET/POST /api/machines/` — CRUD de máquinas com especificações técnicas.
 
 ## Painel administrativo
 - Header customizado com identidade visual da Severinno.
@@ -67,5 +69,6 @@ python backend/manage.py test
 - Autenticação JWT com tempos configuráveis via `JWT_ACCESS_LIFETIME_MINUTES` e `JWT_REFRESH_LIFETIME_DAYS`.
 - Modelo de usuário customizado com autenticação por email e campos institucionais (matrícula, tipo de usuário e foto).
 - Painel administrativo com branding próprio, filtros específicos e CRUD dedicado para professores.
+- API protegida para cadastro de salas e máquinas com verificação de perfil administrador.
 
 Mais detalhes serão documentados nas próximas sprints.
