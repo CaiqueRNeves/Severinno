@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Severinno Admin | {{ block.super }}{% endblock %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/admin-custom.css' %}">
+{% endblock %}
+
+{% block branding %}
+  <a href="{% url 'admin:index' %}" class="severinno-brand">
+    <img src="{% static 'img/logo-admin.svg' %}" alt="Logo Severinno" width="42" height="42">
+    <div>
+      <strong>Severinno</strong>
+      <small>Painel administrativo</small>
+    </div>
+  </a>
+{% endblock %}
+
+{% block nav-global %}
+  <div class="severinno-banner">Ambiente restrito a administradores autorizados.</div>
+{% endblock %}

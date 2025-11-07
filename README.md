@@ -45,6 +45,12 @@ Severinno/
    - `POST /api/accounts/login/` — obtenção de tokens JWT (access + refresh).
    - `POST /api/accounts/refresh/` — renovação do access token.
    - `GET /api/accounts/me/` — dados do usuário autenticado (Bearer token obrigatório).
+   - `GET /admin/` — painel administrativo personalizado (login requerido).
+
+## Painel administrativo
+- Header customizado com identidade visual da Severinno.
+- Proxy `Professor` no Django Admin para CRUD exclusivo de docentes, exibindo foto, e-mail e matrícula.
+- Admin forms garantem que professores sejam sempre do tipo correto, evitando inconsistências.
 
 ## Testes
 Execute todos os testes automatizados com:
@@ -60,5 +66,6 @@ python backend/manage.py test
 - Cabeçalhos HTTP seguros ativados para evitar sniffing/XSS.
 - Autenticação JWT com tempos configuráveis via `JWT_ACCESS_LIFETIME_MINUTES` e `JWT_REFRESH_LIFETIME_DAYS`.
 - Modelo de usuário customizado com autenticação por email e campos institucionais (matrícula, tipo de usuário e foto).
+- Painel administrativo com branding próprio, filtros específicos e CRUD dedicado para professores.
 
 Mais detalhes serão documentados nas próximas sprints.

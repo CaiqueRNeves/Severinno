@@ -1,0 +1,68 @@
+:root {
+  --severinno-primary: #0f172a;
+  --severinno-secondary: #38bdf8;
+  --severinno-bg: #f8fafc;
+}
+
+body.login,
+body.dashboard #container {
+  background-color: var(--severinno-bg);
+}
+
+#header {
+  background: linear-gradient(90deg, var(--severinno-primary), #1d4ed8);
+  color: #fff;
+  border-bottom: none;
+}
+
+#header a:link, #header a:visited {
+  color: #fff;
+}
+
+.severinno-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.severinno-brand img {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.severinno-brand div {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.severinno-brand small {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.severinno-banner {
+  margin-left: auto;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+}
+
+.module h2 {
+  background-color: var(--severinno-secondary);
+}
+
+.dashboard #content-main .module,
+.change-form form,
+#changelist-form {
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  border: none;
+}

@@ -86,3 +86,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self) -> str:
         return f"{self.email} ({self.get_user_type_display()})"
+
+
+class Professor(User):
+    """Proxy usado para facilitar a gestão exclusiva de professores no admin."""
+
+    class Meta:
+        proxy = True
+        verbose_name = "Professor"
+        verbose_name_plural = "Professores"
+        ordering = ["full_name", "email"]
+
+    def save(self, *args, **kwargs):
+        self.user_type = User.UserType.PROFESSOR
+        super().save(*args, **kwargs)
