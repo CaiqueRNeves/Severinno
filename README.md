@@ -48,6 +48,11 @@ Severinno/
    - `GET /admin/` — painel administrativo personalizado (login requerido).
    - `GET/POST /api/rooms/` — CRUD de salas (apenas administradores).
    - `GET/POST /api/machines/` — CRUD de máquinas com especificações técnicas.
+   - `GET/POST /api/reservations/` — reservas para professores (listagem restrita por perfil).
+   - `POST /api/reservations/{id}/cancel/` — cancelamento permitido apenas antes do horário inicial.
+   - `GET /api/reservations/available/?date=YYYY-MM-DD&start_time=HH:MM&end_time=HH:MM` — checagem de disponibilidade.
+   - `GET/POST /api/software-requests/` — solicitações de software vinculadas a reservas (professores).
+   - `PATCH /api/software-requests/{id}/status/` — atualização de status (apenas administradores).
 
 ## Painel administrativo
 - Header customizado com identidade visual da Severinno.
@@ -69,6 +74,7 @@ python backend/manage.py test
 - Autenticação JWT com tempos configuráveis via `JWT_ACCESS_LIFETIME_MINUTES` e `JWT_REFRESH_LIFETIME_DAYS`.
 - Modelo de usuário customizado com autenticação por email e campos institucionais (matrícula, tipo de usuário e foto).
 - Painel administrativo com branding próprio, filtros específicos e CRUD dedicado para professores.
-- API protegida para cadastro de salas e máquinas com verificação de perfil administrador.
+- API protegida para cadastro de salas/máquinas e regras de reserva com validação de conflitos.
+- Fluxo de solicitação de software com controle de status e validação de permissão.
 
 Mais detalhes serão documentados nas próximas sprints.
