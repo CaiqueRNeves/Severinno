@@ -6,6 +6,7 @@ Plataforma de gestão acadêmica desenvolvida seguindo metodologia SCRUM. Este r
 - Django 5 + Django REST Framework
 - PostgreSQL (com fallback para SQLite em desenvolvimento)
 - drf-spectacular para documentação OpenAPI/Swagger
+- djangorestframework-simplejwt para autenticação JWT
 - GitHub Actions para CI (testes + lint básico)
 
 ## Estrutura de pastas
@@ -40,6 +41,10 @@ Severinno/
 3. Endpoints importantes:
    - `GET /api/health/` — verificação rápida de saúde da API.
    - `GET /api/docs/` — documentação interativa (Swagger UI).
+   - `POST /api/accounts/register/` — cadastro de novos usuários (email + matrícula).
+   - `POST /api/accounts/login/` — obtenção de tokens JWT (access + refresh).
+   - `POST /api/accounts/refresh/` — renovação do access token.
+   - `GET /api/accounts/me/` — dados do usuário autenticado (Bearer token obrigatório).
 
 ## Testes
 Execute todos os testes automatizados com:
@@ -53,5 +58,7 @@ python backend/manage.py test
 - CORS configurado para o frontend.
 - Middleware de Content Security Policy (CSP).
 - Cabeçalhos HTTP seguros ativados para evitar sniffing/XSS.
+- Autenticação JWT com tempos configuráveis via `JWT_ACCESS_LIFETIME_MINUTES` e `JWT_REFRESH_LIFETIME_DAYS`.
+- Modelo de usuário customizado com autenticação por email e campos institucionais (matrícula, tipo de usuário e foto).
 
 Mais detalhes serão documentados nas próximas sprints.

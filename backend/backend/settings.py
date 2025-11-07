@@ -6,6 +6,7 @@ para manter o ambiente seguro em qualquer estágio da aplicação.
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -54,6 +55,7 @@ CONTENT_SECURITY_POLICY = os.getenv(
 
 # Application definition
 INSTALLED_APPS = [
+    "accounts",
     "corsheaders",
     "rest_framework",
     "drf_spectacular",
@@ -160,13 +162,31 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.JSONParser",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.BasicAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+AUTH_USER_MODEL = "accounts.User"
+
+ACCESS_TOKEN_MINUTES = int(os.getenv("JWT_ACCESS_LIFETIME_MINUTES", "5"))
+REFRESH_TOKEN_DAYS = int(os.getenv("JWT_REFRESH_LIFETIME_DAYS", "1"))
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=ACCESS_TOKEN_MINUTES),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=REFRESH_TOKEN_DAYS),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "SIGNING_KEY": SECRET_KEY,
+    "ALGORITHM": "HS256",
 }
 
 SPECTACULAR_SETTINGS = {
