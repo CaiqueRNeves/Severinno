@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+*.log
+*.pot
+*.pyc
+
+# Django / data
+backend/db.sqlite3
+media/
+staticfiles/
+
+# Virtual environments
+venv/
+backend/.venv/
+.env
+.env.local
+
+# Testing artifacts
+.coverage
+htmlcov/
+pytest_cache/
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+
+# IDE / tooling
+.vscode/
+.idea/
+.DS_Store
+*.swp
