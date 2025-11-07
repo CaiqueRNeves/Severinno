@@ -1,10 +1,3 @@
-"""
-Configurações globais do projeto Severinno.
-
-Todas as variáveis sensíveis devem vir de um arquivo .env
-para manter o ambiente seguro em qualquer estágio da aplicação.
-"""
-
 import os
 from datetime import timedelta
 from pathlib import Path
