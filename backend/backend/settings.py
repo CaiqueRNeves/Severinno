@@ -61,6 +61,8 @@ CELERY_TASK_EAGER_PROPAGATES = True
 
 # Application definition
 INSTALLED_APPS = [
+    "chat",
+    "channels",
     "notifications",
     "logs",
     "software_requests",
@@ -110,6 +112,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "backend.wsgi.application"
+ASGI_APPLICATION = "backend.asgi.application"
 
 # Banco de dados com fallback seguro para SQLite
 if os.getenv("POSTGRES_DB"):
@@ -236,3 +239,11 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = os.getenv("DJANGO_SECURE_SSL_REDIRECT", "True").lower() == "true"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.getenv("REDIS_URL", "redis://localhost:6379/2")],
+        },
+    }
+}

@@ -11,6 +11,7 @@ urlpatterns = [
     path("api/", include("reservations.urls")),
     path("api/", include("software_requests.urls")),
     path("api/", include("notifications.urls")),
+    path("api/", include("chat.urls")),
     path("api/", include("logs.urls")),
     path("api/", include("core.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),

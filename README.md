@@ -59,6 +59,7 @@ Severinno/
    cd frontend
    npm run dev
    ```
+5. Para chat em tempo real e notificações, mantenha o Redis em execução (veja `REDIS_URL`). O `runserver` já suporta Channels, mas em produção utilize um servidor ASGI como `daphne backend.asgi:application`.
 3. Endpoints importantes:
    - `GET /api/health/` — verificação rápida de saúde da API.
    - `GET /api/docs/` — documentação interativa (Swagger UI).
@@ -76,6 +77,10 @@ Severinno/
    - `PATCH /api/software-requests/{id}/status/` — atualização de status (apenas administradores).
    - `POST /api/accounts/logout/` — invalida o refresh token via blacklist (requer autenticação).
    - `GET /api/logs/` — consulta paginada de auditoria (apenas administradores).
+   - `GET /api/chat/conversations/` — lista conversas do usuário logado.
+   - `GET /api/chat/conversations/{id}/messages/` — histórico utilizado antes de iniciar o WebSocket.
+   - `POST /api/chat/messages/` — envio via HTTP (opcional) para integração com bots/serviços.
+   - `WS /ws/chat/<conversation_id>/?token=<JWT>` — canal WebSocket autenticado para chat.
 
 ## Painel administrativo
 - Header customizado com identidade visual da Severinno.
@@ -103,6 +108,7 @@ python backend/manage.py test
 - Regras de segurança avançadas ativadas em produção (HSTS, SSL redirect, cookies HttpOnly, CSP).
 - Auditoria automática (salas, máquinas, reservas, solicitações) e endpoint `/api/logs/` restrito a administradores.
 - Sistema de notificações com fila Celery + Redis (emails e alertas) e API para leitura/confirmar recebimento.
-- Painel do professor e painel administrativo (frontend) com rotas `/reservas` e `/admin` já conectadas aos endpoints.
+- Painel do professor, chat e painel administrativo (frontend) com rotas `/reservas`, `/chat` e `/admin` já conectadas aos endpoints.
+- Chat em tempo real implementado com Django Channels + Channels Redis, autenticação JWT e fallback mockado para desenvolvimento.
 
 Mais detalhes serão documentados nas próximas sprints.

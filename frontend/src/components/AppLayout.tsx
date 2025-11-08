@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet } from 'react-router-dom'
 const navLinks = [
   { to: '/dashboard', label: 'Dashboard' },
   { to: '/reservas', label: 'Reservas' },
+  { to: '/chat', label: 'Chat' },
   { to: '/admin', label: 'Admin' },
 ]
 
