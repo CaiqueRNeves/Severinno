@@ -91,8 +91,9 @@ Severinno/
 Execute todos os testes automatizados com:
 ```bash
 source venv/bin/activate
-python backend/manage.py test
+pytest --cov=backend --cov-report=term-missing
 ```
+Para medir cobertura apenas do backend ou rodar a suíte tradicional do Django, utilize `python backend/manage.py test`.
 
 ## Segurança já aplicada
 - Configurações via `.env`.
