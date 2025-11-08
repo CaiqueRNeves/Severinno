@@ -54,6 +54,7 @@ Severinno/
    - `GET/POST /api/software-requests/` — solicitações de software vinculadas a reservas (professores).
    - `PATCH /api/software-requests/{id}/status/` — atualização de status (apenas administradores).
    - `POST /api/accounts/logout/` — invalida o refresh token via blacklist (requer autenticação).
+   - `GET /api/logs/` — consulta paginada de auditoria (apenas administradores).
 
 ## Painel administrativo
 - Header customizado com identidade visual da Severinno.
@@ -79,5 +80,6 @@ python backend/manage.py test
 - Fluxo de solicitação de software com controle de status e validação de permissão.
 - Autenticação JWT com refresh rotativo + blacklist (logout seguro) e throttling configurável.
 - Regras de segurança avançadas ativadas em produção (HSTS, SSL redirect, cookies HttpOnly, CSP).
+- Auditoria automática (salas, máquinas, reservas, solicitações) e endpoint `/api/logs/` restrito a administradores.
 
 Mais detalhes serão documentados nas próximas sprints.
