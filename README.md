@@ -38,6 +38,10 @@ Severinno/
    ```bash
    python backend/manage.py runserver
    ```
+3. (Opcional) Para processar notificações assíncronas, suba o worker Celery:
+   ```bash
+   celery -A backend worker -l info
+   ```
 3. Endpoints importantes:
    - `GET /api/health/` — verificação rápida de saúde da API.
    - `GET /api/docs/` — documentação interativa (Swagger UI).
@@ -81,5 +85,6 @@ python backend/manage.py test
 - Autenticação JWT com refresh rotativo + blacklist (logout seguro) e throttling configurável.
 - Regras de segurança avançadas ativadas em produção (HSTS, SSL redirect, cookies HttpOnly, CSP).
 - Auditoria automática (salas, máquinas, reservas, solicitações) e endpoint `/api/logs/` restrito a administradores.
+- Sistema de notificações com fila Celery + Redis (emails e alertas) e API para leitura/confirmar recebimento.
 
 Mais detalhes serão documentados nas próximas sprints.

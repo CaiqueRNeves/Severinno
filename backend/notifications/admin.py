@@ -1,0 +1,13 @@
+"""Admin das notificações."""
+
+from django.contrib import admin
+
+from notifications.models import Notification
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ("title", "user", "channel", "is_read", "created_at")
+    list_filter = ("channel", "is_read")
+    search_fields = ("title", "message", "user__email")
+    readonly_fields = ("created_at",)
