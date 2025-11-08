@@ -28,6 +28,17 @@ Severinno/
    pip install -r requirements.txt
    ```
 
+### Frontend (React + Vite + Tailwind)
+1. Entre na pasta `frontend/` e copie o `.env.example` para `.env` atualizando `VITE_API_URL` se necessário.
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Rode o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+
 ## Executar o backend
 1. Aplique as migrações:
    ```bash
@@ -41,6 +52,12 @@ Severinno/
 3. (Opcional) Para processar notificações assíncronas, suba o worker Celery:
    ```bash
    celery -A backend worker -l info
+   ```
+
+4. Em paralelo, rode o frontend:
+   ```bash
+   cd frontend
+   npm run dev
    ```
 3. Endpoints importantes:
    - `GET /api/health/` — verificação rápida de saúde da API.
