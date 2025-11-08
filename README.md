@@ -1,0 +1,129 @@
+# Severinno
+
+Plataforma de gestão acadêmica desenvolvida seguindo metodologia SCRUM. Este repositório contém o backend em Django Rest Framework e, futuramente, o frontend em React.
+
+## Tecnologias
+- Django 5 + Django REST Framework
+- PostgreSQL (com fallback para SQLite em desenvolvimento)
+- drf-spectacular para documentação OpenAPI/Swagger
+- djangorestframework-simplejwt para autenticação JWT
+- GitHub Actions para CI (testes + lint básico)
+
+## Estrutura de pastas
+```
+Severinno/
+├── backend/        # Projeto Django + apps
+├── frontend/       # Aplicação React (será construída nas próximas sprints)
+├── requirements.txt
+└── README.md
+```
+
+## Preparação do ambiente
+1. Crie um arquivo `.env` na raiz com base no `.env.example`.
+2. (Opcional) Suba um banco PostgreSQL local e ajuste as variáveis `POSTGRES_*`.
+3. Crie e ative um ambiente virtual e instale as dependências:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+### Frontend (React + Vite + Tailwind)
+1. Entre na pasta `frontend/` e copie o `.env.example` para `.env` atualizando `VITE_API_URL` se necessário.
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Rode o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+
+## Executar o backend
+1. Aplique as migrações:
+   ```bash
+   source venv/bin/activate
+   python backend/manage.py migrate
+   ```
+2. Rode o servidor de desenvolvimento:
+   ```bash
+   python backend/manage.py runserver
+   ```
+3. (Opcional) Para processar notificações assíncronas, suba o worker Celery:
+   ```bash
+   celery -A backend worker -l info
+   ```
+
+4. Em paralelo, rode o frontend:
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+5. Para chat em tempo real e notificações, mantenha o Redis em execução (veja `REDIS_URL`). O `runserver` já suporta Channels, mas em produção utilize um servidor ASGI como `daphne backend.asgi:application`.
+6. **Docker (stack completo)**:
+   ```bash
+   docker compose up --build
+   ```
+   - Backend disponível em `http://localhost:8000`
+   - Frontend disponível em `http://localhost:3000`
+   - Postgres exposto em `localhost:5432` e Redis em `localhost:6379` (não use em produção sem proteger)
+   - Worker Celery sobe automaticamente com o serviço `celery`
+   Para parar: `docker compose down` (use `-v` para remover volumes caso necessário).
+3. Endpoints importantes:
+   - `GET /api/health/` — verificação rápida de saúde da API.
+   - `GET /api/docs/` — documentação interativa (Swagger UI).
+   - `POST /api/accounts/register/` — cadastro de novos usuários (email + matrícula).
+   - `POST /api/accounts/login/` — obtenção de tokens JWT (access + refresh).
+   - `POST /api/accounts/refresh/` — renovação do access token.
+   - `GET /api/accounts/me/` — dados do usuário autenticado (Bearer token obrigatório).
+   - `GET /admin/` — painel administrativo personalizado (login requerido).
+   - `GET/POST /api/rooms/` — CRUD de salas (apenas administradores).
+   - `GET/POST /api/machines/` — CRUD de máquinas com especificações técnicas.
+   - `GET/POST /api/reservations/` — reservas para professores (listagem restrita por perfil).
+   - `POST /api/reservations/{id}/cancel/` — cancelamento permitido apenas antes do horário inicial.
+   - `GET /api/reservations/available/?date=YYYY-MM-DD&start_time=HH:MM&end_time=HH:MM` — checagem de disponibilidade.
+   - `GET/POST /api/software-requests/` — solicitações de software vinculadas a reservas (professores).
+   - `PATCH /api/software-requests/{id}/status/` — atualização de status (apenas administradores).
+   - `POST /api/accounts/logout/` — invalida o refresh token via blacklist (requer autenticação).
+   - `GET /api/logs/` — consulta paginada de auditoria (apenas administradores).
+   - `GET /api/chat/conversations/` — lista conversas do usuário logado.
+   - `GET /api/chat/conversations/{id}/messages/` — histórico utilizado antes de iniciar o WebSocket.
+   - `POST /api/chat/messages/` — envio via HTTP (opcional) para integração com bots/serviços.
+   - `WS /ws/chat/<conversation_id>/?token=<JWT>` — canal WebSocket autenticado para chat.
+
+## Painel administrativo
+- Header customizado com identidade visual da Severinno.
+- Proxy `Professor` no Django Admin para CRUD exclusivo de docentes, exibindo foto, e-mail e matrícula.
+- Admin forms garantem que professores sejam sempre do tipo correto, evitando inconsistências.
+
+## Testes
+Execute todos os testes automatizados com:
+```bash
+source venv/bin/activate
+pytest --cov=backend --cov-report=term-missing
+```
+Para medir cobertura apenas do backend ou rodar a suíte tradicional do Django, utilize `python backend/manage.py test`.
+
+## Deploy / CI/CD
+- O workflow `.github/workflows/deploy.yml` constrói e publica as imagens Docker (backend e frontend) no GitHub Container Registry sempre que a branch `sprint-16-deploy` recebe pushes.
+- O arquivo `render.yaml` documenta uma configuração de referência no Render (web service para o backend, serviço estático para o frontend, Postgres e Redis gerenciados). Ajuste os secrets (`DJANGO_SECRET_KEY`, `POSTGRES_PASSWORD`, etc.) conforme seu ambiente.
+- Para uso em Railway ou outros provedores, basta apontar para as imagens publicadas no GHCR ou reutilizar os Dockerfiles incluídos.
+
+## Segurança já aplicada
+- Configurações via `.env`.
+- CORS configurado para o frontend.
+- Middleware de Content Security Policy (CSP).
+- Cabeçalhos HTTP seguros ativados para evitar sniffing/XSS.
+- Autenticação JWT com tempos configuráveis via `JWT_ACCESS_LIFETIME_MINUTES` e `JWT_REFRESH_LIFETIME_DAYS`.
+- Modelo de usuário customizado com autenticação por email e campos institucionais (matrícula, tipo de usuário e foto).
+- Painel administrativo com branding próprio, filtros específicos e CRUD dedicado para professores.
+- API protegida para cadastro de salas/máquinas e regras de reserva com validação de conflitos.
+- Fluxo de solicitação de software com controle de status e validação de permissão.
+- Autenticação JWT com refresh rotativo + blacklist (logout seguro) e throttling configurável.
+- Regras de segurança avançadas ativadas em produção (HSTS, SSL redirect, cookies HttpOnly, CSP).
+- Auditoria automática (salas, máquinas, reservas, solicitações) e endpoint `/api/logs/` restrito a administradores.
+- Sistema de notificações com fila Celery + Redis (emails e alertas) e API para leitura/confirmar recebimento.
+- Painel do professor, chat e painel administrativo (frontend) com rotas `/reservas`, `/chat` e `/admin` já conectadas aos endpoints.
+- Chat em tempo real implementado com Django Channels + Channels Redis, autenticação JWT e fallback mockado para desenvolvimento.
+
+Mais detalhes serão documentados nas próximas sprints.
