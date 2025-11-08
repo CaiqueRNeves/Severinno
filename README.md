@@ -103,5 +103,6 @@ python backend/manage.py test
 - Regras de segurança avançadas ativadas em produção (HSTS, SSL redirect, cookies HttpOnly, CSP).
 - Auditoria automática (salas, máquinas, reservas, solicitações) e endpoint `/api/logs/` restrito a administradores.
 - Sistema de notificações com fila Celery + Redis (emails e alertas) e API para leitura/confirmar recebimento.
+- Painel do professor e painel administrativo (frontend) com rotas `/reservas` e `/admin` já conectadas aos endpoints.
 
 Mais detalhes serão documentados nas próximas sprints.
