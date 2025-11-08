@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: severinno-backend
+    env: docker
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        sync: false
+      - key: POSTGRES_DB
+        value: severinno
+      - key: POSTGRES_USER
+        value: severinno
+      - key: POSTGRES_PASSWORD
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: severinno-redis
+          property: connectionString
+    dockerfilePath: Dockerfile.backend
+
+  - type: static
+    name: severinno-frontend
+    env: static
+    plan: free
+    buildCommand: npm install && npm run build
+    publishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://severinno-backend.onrender.com
+
+databases:
+  - name: severinno-db
+
+redis:
+  - name: severinno-redis

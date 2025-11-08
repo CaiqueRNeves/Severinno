@@ -60,6 +60,15 @@ Severinno/
    npm run dev
    ```
 5. Para chat em tempo real e notificações, mantenha o Redis em execução (veja `REDIS_URL`). O `runserver` já suporta Channels, mas em produção utilize um servidor ASGI como `daphne backend.asgi:application`.
+6. **Docker (stack completo)**:
+   ```bash
+   docker compose up --build
+   ```
+   - Backend disponível em `http://localhost:8000`
+   - Frontend disponível em `http://localhost:3000`
+   - Postgres exposto em `localhost:5432` e Redis em `localhost:6379` (não use em produção sem proteger)
+   - Worker Celery sobe automaticamente com o serviço `celery`
+   Para parar: `docker compose down` (use `-v` para remover volumes caso necessário).
 3. Endpoints importantes:
    - `GET /api/health/` — verificação rápida de saúde da API.
    - `GET /api/docs/` — documentação interativa (Swagger UI).
@@ -94,6 +103,11 @@ source venv/bin/activate
 pytest --cov=backend --cov-report=term-missing
 ```
 Para medir cobertura apenas do backend ou rodar a suíte tradicional do Django, utilize `python backend/manage.py test`.
+
+## Deploy / CI/CD
+- O workflow `.github/workflows/deploy.yml` constrói e publica as imagens Docker (backend e frontend) no GitHub Container Registry sempre que a branch `sprint-16-deploy` recebe pushes.
+- O arquivo `render.yaml` documenta uma configuração de referência no Render (web service para o backend, serviço estático para o frontend, Postgres e Redis gerenciados). Ajuste os secrets (`DJANGO_SECRET_KEY`, `POSTGRES_PASSWORD`, etc.) conforme seu ambiente.
+- Para uso em Railway ou outros provedores, basta apontar para as imagens publicadas no GHCR ou reutilizar os Dockerfiles incluídos.
 
 ## Segurança já aplicada
 - Configurações via `.env`.

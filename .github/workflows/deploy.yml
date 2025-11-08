@@ -1,0 +1,49 @@
+name: Docker Build & Deploy
+
+on:
+  push:
+    branches:
+      - sprint-16-deploy
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build backend image
+        run: |
+          docker build -f Dockerfile.backend -t $REGISTRY/${{ github.repository_owner }}/severinno-backend:${{ github.sha }} .
+      - name: Push backend image
+        run: |
+          docker push $REGISTRY/${{ github.repository_owner }}/severinno-backend:${{ github.sha }}
+
+      - name: Build frontend image
+        run: |
+          docker build -f Dockerfile.frontend -t $REGISTRY/${{ github.repository_owner }}/severinno-frontend:${{ github.sha }} .
+      - name: Push frontend image
+        run: |
+          docker push $REGISTRY/${{ github.repository_owner }}/severinno-frontend:${{ github.sha }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/sprint-16-deploy'
+    steps:
+      - name: Deploy placeholder
+        run: |
+          echo "Configure seu provedor (Render/Railway) usando secrets." 
