@@ -2,6 +2,11 @@ import type { FormEvent } from 'react'
 import { useState } from 'react'
 import { API_URL } from '../lib/api'
 
+const STORAGE_KEYS = {
+  access: 'severinno.accessToken',
+  refresh: 'severinno.refreshToken',
+}
+
 export function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -9,7 +14,7 @@ export function LoginPage() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
-    setMessage('Realizando login (mock). Configure integração quando a API estiver pronta.')
+    setMessage('Realizando login...')
     try {
       const response = await fetch(`${API_URL}/api/accounts/login/`, {
         method: 'POST',
@@ -19,7 +24,14 @@ export function LoginPage() {
       if (!response.ok) {
         throw new Error('Falha no login')
       }
-      setMessage('Login realizado! Salve o token no armazenamento seguro.')
+      const data = await response.json()
+      if (data.access) {
+        localStorage.setItem(STORAGE_KEYS.access, data.access)
+      }
+      if (data.refresh) {
+        localStorage.setItem(STORAGE_KEYS.refresh, data.refresh)
+      }
+      setMessage('Login realizado! Tokens armazenados localmente.')
     } catch (error) {
       setMessage((error as Error).message)
     }
@@ -63,6 +75,9 @@ export function LoginPage() {
         </button>
       </form>
       {message && <p className="mt-4 text-sm text-slate-600">{message}</p>}
+      <p className="mt-4 text-xs text-slate-400">
+        Ao autenticar você poderá consumir automaticamente os endpoints protegidos do backend.
+      </p>
     </div>
   )
 }
